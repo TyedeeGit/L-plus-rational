@@ -1,11 +1,7 @@
+// import { Rational, constants } from "./utils.js";
+// import { ItemRate } from "./item.js";
+// import { FluidRate from "./fluid.js"}
 
-class Rational {
-  // A rational number
-  constructor(n1, n2) {
-    this.n1 = n1;
-    this.n2 = n2;
-  }
-};
 
 class CrafterType {
   constructor(inputs, fluid_inputs, outputs, fluid_outputs) {
@@ -23,24 +19,6 @@ export const crafter_types = {
   crafter_constructor: new BuildingType(1, 0, 1, 0),
   crafter_assembler: new BuildingType(2, 0, 1, 0),
   crafter_manufacturer: new BuildingType(4, 0, 1, 0),
-};
-
-// Define max rates
-export const conveyor_rates = [60, 120, 270, 480, 780];
-export const pipeline_rates = [300, 600];
-
-export class ItemRate {
-  constructor(item_id, rate) {
-    this.item_id = item_id;
-    this.rate = rate;
-  }
-};
-
-export class FluidRate extends ItemRate {
-  constructor(fluid_id, rate) {
-    this.fluid_id = fluid_id;
-    this.rate = rate;
-  }
 };
 
 export class Recipe {
@@ -91,7 +69,7 @@ export class Crafter extends Building {
   };
 };
 
-class Port {
+class Link {
   constructor(input, output) {
     this.input = input;
     this.output = output;
@@ -100,18 +78,18 @@ class Port {
 
 export class Conveyor {
   constructor(mk, input_building, output_building) {
-    this.max_rate = conveyor_rates[mk-1];
+    this.max_rate = constants.conveyor_rates[mk-1];
     this.attach_input(input_building);
     this.attach_output(output_building);
   };
   
   attach_input(building) {
-    building.conveyor_outputs.push(new Port(building, this));
+    building.conveyor_outputs.push(new Link(building, this));
     this.input_building = building;
   };
   
   attach_output(building) {
-    building.conveyor_inputs.push(new Port(this, building));
+    building.conveyor_inputs.push(new Link(this, building));
     this.output_building = building;
   };
 };
